@@ -1,0 +1,74 @@
+---
+- name: Garantir que o usuário administrativo existe
+  user:
+    name: "{{ admin_username }}"
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+    state: present
+
+- name: Permitir sudo sem senha (essencial para automação)
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^%sudo"
+    line: "%sudo ALL=(ALL) NOPASSWD:ALL"
+    validate: "visudo -cf %s"
+
+- name: Instalar ferramentas base e dependências das CLIs
+  apt:
+    name:
+      - curl
+      - wget
+      - git
+      - socat
+      - software-properties-common
+      - unzip
+      - gnupg
+      - python3-pip
+    state: present
+    update_cache: yes
+
+# Exemplo de instalação da AWS CLI (Substancial para seu workshop)
+- name: Instalar AWS CLI v2
+  shell: |
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    unzip -o awscliv2.zip
+    ./aws/install --update
+    rm -rf awscliv2.zip aws
+  args:
+    creates: /usr/local/bin/aws
+
+# Exemplo de instalação do Terraform
+- name: Instalar Terraform
+  shell: |
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list
+    apt-get update && apt-get install terraform -y
+  args:
+    creates: /usr/bin/terraform
+
+- name: Instalar Kubectl
+  shell: |
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+  args:
+    creates: /usr/local/bin/kubectl
+
+- name: Instalar Helm
+  shell: |
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    chmod 700 get_helm.sh
+    ./get_helm.sh
+    rm get_helm.sh
+  args:
+    creates: /usr/local/bin/helm
+
+- name: Instalar Kustomize
+  shell: |
+    curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+    sudo install -o root -g root -m 0755 kustomize /usr/local/bin/kustomize
+    rm kustomize
+  args:
+    creates: /usr/local/bin/kustomize

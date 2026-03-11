@@ -1,0 +1,2 @@
+admin_username: ansible-workshop-aws
+ssh_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVeeWZNHbcPg5Vl/Uo37VGMU1FtGEBdgF0RW6ImaHCT ansible-workshop-aws"

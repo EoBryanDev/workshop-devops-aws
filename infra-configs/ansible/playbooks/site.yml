@@ -1,0 +1,5 @@
+- name: Configuração do Dev Container
+  hosts: workshop # Mudado de ubuntu para workshop
+  become: true
+  roles:
+    - common

@@ -1,0 +1,17 @@
+services:
+  workshop-container:
+    build: .
+    container_name: workshop-container
+    user: bryan
+    volumes:
+      - ~/.ssh/ansible-workshop-aws:/home/bryan/.ssh/id_ed25519:ro
+    stdin_open: true
+    tty: true
+    command: sleep infinity
+
+volumes:
+  workshop_data:
+
+networks:
+  workshop-net:
+    driver: bridge
