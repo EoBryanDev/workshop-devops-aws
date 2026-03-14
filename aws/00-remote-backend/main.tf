@@ -5,6 +5,13 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket = "workshop-march-remote-bknd-bucket-bryan"
+    key    = "bootstrap/terraform.tfstate" 
+    region = "us-east-2"
+    use_lockfile = true
+  }
 }
 
 provider "aws" {
