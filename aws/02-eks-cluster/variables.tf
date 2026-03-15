@@ -17,3 +17,8 @@ variable "assume_role" {
     region = "us-east-2"
   }
 }
+
+variable "ecr_repositories" {
+  type = list(string)
+  default = [ "workshop/production/frontend", "workshop/production/backend" ]
+}
