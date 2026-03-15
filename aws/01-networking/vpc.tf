@@ -1,8 +1,8 @@
 # Create a VPC
 resource "aws_vpc" "this" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc.cidr_block
 
   tags = {
-    Name = "workshop-march-vps"
+    Name = var.vpc.name
   }
 }
